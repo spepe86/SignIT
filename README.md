@@ -1,356 +1,280 @@
 <p align="center">
-  <img src="assets/icon.ico" alt="SignIT Logo" width="80" />
+  <img src="assets/icon.ico" alt="SignIT Logo" width="96" />
 </p>
 
 <h1 align="center">Let's Do. | SignIT</h1>
 
 <p align="center">
-  <strong>Modernes Windows-Tool zum Signieren von EXE-Dateien mit Code-Signing-Zertifikaten</strong>
+  <strong>Modern Windows GUI for signing EXE, DLL &amp; MSI files with code-signing certificates</strong>
 </p>
 
 <p align="center">
-  <a href="#features">Features</a> &bull;
-  <a href="#screenshots">Screenshots</a> &bull;
-  <a href="#installation">Installation</a> &bull;
-  <a href="#verwendung">Verwendung</a> &bull;
-  <a href="#selbst-bauen">Selbst bauen</a> &bull;
-  <a href="#projektstruktur">Projektstruktur</a> &bull;
-  <a href="#lizenz">Lizenz</a>
+  <a href="#features">Features</a> •
+  <a href="#screenshots">Screenshots</a> •
+  <a href="#installation">Installation</a> •
+  <a href="#usage">Usage</a> •
+  <a href="#build-from-source">Build</a> •
+  <a href="#project-structure">Structure</a> •
+  <a href="#contributing">Contributing</a> •
+  <a href="#license">License</a>
 </p>
 
 <p align="center">
-  <img src="https://img.shields.io/badge/Plattform-Windows-blue?style=flat-square&logo=windows" alt="Windows" />
-  <img src="https://img.shields.io/badge/Python-3.10%2B-3776ab?style=flat-square&logo=python&logoColor=white" alt="Python 3.10+" />
+  <img src="https://img.shields.io/badge/Platform-Windows%2010%2F11-0078D4?style=flat-square&logo=windows" alt="Windows" />
+  <img src="https://img.shields.io/badge/Python-3.10+-3776AB?style=flat-square&logo=python&logoColor=white" alt="Python 3.10+" />
   <img src="https://img.shields.io/badge/GUI-CustomTkinter-1f6feb?style=flat-square" alt="CustomTkinter" />
-  <img src="https://img.shields.io/badge/Lizenz-Apache%202.0-brightgreen?style=flat-square" alt="Apache 2.0" />
+  <img src="https://img.shields.io/badge/License-Apache%202.0-brightgreen?style=flat-square" alt="Apache 2.0" />
+  <img src="https://img.shields.io/github/v/release/spepe86/SignIT?style=flat-square&label=Release" alt="Release" />
+</p>
+
+<p align="center">
+  🇩🇪 <a href="README.de.md">Deutsche Version</a>
 </p>
 
 ---
 
-## Was ist SignIT?
+## The Problem
 
-**SignIT** ist eine moderne, benutzerfreundliche Desktop-Anwendung fuer Windows, die den gesamten Workflow zum Signieren von ausfuehrbaren Dateien (`.exe`, `.dll`, `.msi`, `.sys`, `.cab`) mit Code-Signing-Zertifikaten abbildet.
+Signing executables with `signtool.exe` means juggling cryptic command-line flags, hunting for the right SDK path, copying certificate thumbprints by hand — and repeating all of that for every single file.
 
-Anstatt kryptische Kommandozeilen-Befehle zusammenzubauen, fuehrt SignIT Sie Schritt fuer Schritt durch den Prozess -- mit einer uebersichtlichen grafischen Oberflaeche, Live-Feedback und klaren Fehlermeldungen.
+## The Solution
 
-### Das Problem
+**SignIT** wraps the entire workflow in a clean, modern GUI:
 
-Code-Signing mit `signtool.exe` erfordert normalerweise:
-- Den korrekten Pfad zu `signtool.exe` kennen
-- Den SHA-1 Thumbprint des Zertifikats manuell heraussuchen
-- Lange Kommandozeilen-Befehle korrekt zusammenbauen
-- Bei mehreren Dateien: alles einzeln wiederholen
-
-### Die Loesung
-
-SignIT macht das mit **5 Klicks**:
-
-> **SignTool finden** -> **Zertifikat waehlen** -> **Dateien waehlen** -> **Timestamp konfigurieren** -> **Signieren**
+> **Find SignTool** → **Pick Certificate** → **Select Files** → **Configure Timestamp** → **Sign**
+>
+> Five clicks. Done.
 
 ---
 
 ## Features
 
-### Zertifikatsverwaltung
-- Automatisches Laden aller gueltigen Code-Signing-Zertifikate aus dem Windows-Zertifikatsspeicher
-- Unterstuetzung fuer `CurrentUser` und `LocalMachine` Speicherorte
-- Filtert automatisch: nur Zertifikate mit privatem Schluessel, die noch gueltig sind
-- Tabellarische Anzeige mit **Subject**, **Aussteller**, **Gueltig bis** und **Thumbprint**
-- Nativer Win32-API-Zugriff via `ctypes` (kein Python-Wrapper noetig) mit PowerShell-Fallback
+### 🔐 Certificate Management
+- Automatically loads all valid code-signing certificates from the **Windows Certificate Store**
+- Supports `CurrentUser` and `LocalMachine` store locations
+- Filters for certificates with a private key that are still valid
+- Native **Win32 Crypto API** access via `ctypes` — PowerShell fallback included
 
-### Dateiauswahl
-- Mehrfachauswahl ueber den nativen Windows-Datei-Dialog
-- Unterstuetzung fuer `.exe`, `.dll`, `.msi`, `.sys`, `.ocx`, `.cab`
-- Dateien einzeln wieder entfernbar
-- Anzeige von Dateiname, Pfad und Dateigroesse
+### 📁 File Selection
+- Multi-select via native Windows file dialog
+- Supports `.exe`, `.dll`, `.msi`, `.sys`, `.ocx`, `.cab`
+- Remove individual files before signing
+- Shows file name, path, and size at a glance
 
-### SignTool-Integration
-- **Automatische Suche** nach `signtool.exe` im System-PATH und in Windows SDK-Installationen
-- Unterstuetzt Windows SDK 8.0, 8.1 und 10.x
-- Bevorzugt automatisch die x64-Version
-- Manueller Pfad jederzeit konfigurierbar
+### 🔧 SignTool Integration
+- **Auto-detection** of `signtool.exe` in PATH and Windows SDK installations (8.0 / 8.1 / 10.x)
+- Prefers the x64 binary automatically
+- Manual path override available at any time
 
-### Timestamp-Server
-- Vorbelegt mit **DigiCert** (Industriestandard)
-- Dropdown mit gaengigen Alternativen:
-  - DigiCert, Sectigo, GlobalSign, Comodo, SSL.com, Entrust
-- Eigene URL jederzeit eingebbar
+### 🕐 Timestamp Server
+- Pre-configured with **DigiCert** (industry standard)
+- Dropdown with popular alternatives: Sectigo, GlobalSign, Comodo, SSL.com, Entrust
+- Custom URL input supported
 
-### Signiervorgang
-- Signiert mit SHA-256 (`/fd sha256 /td sha256`)
-- RFC 3161 Timestamping (`/tr`)
-- Sequentielle Verarbeitung mehrerer Dateien
-- **Echtzeit-Fortschrittsbalken** pro Datei
-- **Live-Log** mit farbiger Hervorhebung:
-  - Gruen = Erfolg
-  - Rot = Fehler
-  - Gelb = Warnung
-  - Blau = Info
+### ✍️ Signing Process
+- Signs with **SHA-256** (`/fd sha256 /td sha256`)
+- RFC 3161 timestamping (`/tr`)
+- Sequential batch processing of multiple files
+- **Real-time progress bar** per file
+- **Color-coded live log**: 🟢 Success · 🔴 Error · 🟡 Warning · 🔵 Info
 
-### Benutzeroberflaeche
-- **Dark Theme** als Standard (Light Theme per Klick umschaltbar)
-- Modernes Flat-Design mit CustomTkinter
-- Zwei-Spalten-Layout: Konfiguration links, Live-Log rechts
-- Statusleiste mit aktueller Aktion
-- Log exportierbar als `.txt`-Datei
-- Mindestgroesse 920x700px, responsive
+### 🎨 User Interface
+- **Dark theme** by default (light theme toggle)
+- Modern flat design powered by CustomTkinter
+- Two-column layout: configuration on the left, live log on the right
+- Status bar with current action
+- Export log as `.txt`
+- Responsive — minimum size 920 × 700 px
 
 ---
 
 ## Screenshots
 
-> **Hinweis:** Screenshots koennen nach dem ersten Start der Anwendung hinzugefuegt werden.
-
-<!--
-![SignIT Hauptfenster](docs/screenshot-main.png)
-![Signiervorgang](docs/screenshot-signing.png)
--->
+> 📸 **Coming soon** — screenshots will be added with the next release.
 
 ---
 
 ## Installation
 
-### Option 1: Fertige EXE herunterladen (empfohlen)
+### Option 1: Download the ready-made EXE *(recommended)*
 
-1. Gehen Sie zu [**Releases**](../../releases)
-2. Laden Sie die neueste `SignIT.exe` herunter
-3. Starten Sie die EXE -- keine Installation noetig
+1. Head over to [**Releases**](https://github.com/spepe86/SignIT/releases)
+2. Download the latest `SignIT.exe`
+3. Run it — no installation required
 
-> **Hinweis:** Windows SmartScreen kann beim ersten Start eine Warnung anzeigen. Klicken Sie auf *"Weitere Informationen"* -> *"Trotzdem ausfuehren"*. Dies passiert, weil die EXE (noch) nicht mit einem EV-Zertifikat signiert ist.
+> **Note:** Windows SmartScreen may show a warning on first launch. Click *"More info"* → *"Run anyway"*. This happens because the EXE is not yet signed with an EV certificate.
 
-### Option 2: Aus dem Quellcode starten
+### Option 2: Run from source
 
-**Voraussetzungen:**
-- Python 3.10 oder neuer
-- Windows 10/11
-- Optional: Windows SDK (fuer `signtool.exe`)
+**Requirements:** Python 3.10+, Windows 10/11, optionally a Windows SDK
 
 ```bash
-# Repository klonen
-git clone https://github.com/IHR-USERNAME/signit.git
-cd signit
+git clone https://github.com/spepe86/SignIT.git
+cd SignIT
 
-# Abhaengigkeiten installieren
 pip install -r requirements.txt
 
-# Starten
 python main.py
 ```
 
 ---
 
-## Verwendung
+## Usage
 
-### 1. Zertifikat auswaehlen
+### 1. Select a Certificate
+- Choose the store location (`CurrentUser` or `LocalMachine`)
+- Click **"Refresh"** to load certificates
+- Click on the desired certificate in the list
 
-- Waehlen Sie den Speicherort (`CurrentUser` oder `LocalMachine`)
-- Klicken Sie **"Aktualisieren"** um die Zertifikate zu laden
-- Klicken Sie auf das gewuenschte Zertifikat in der Liste
+### 2. Add Files
+- Click **"Add files…"**
+- Select one or more files
+- Remove individual files with the **✕** button
 
-### 2. Dateien hinzufuegen
+### 3. Configure SignTool
+- SignIT searches for `signtool.exe` automatically
+- If not found, click **"Browse…"** to set the path manually
+- The timestamp server defaults to DigiCert — change if needed
 
-- Klicken Sie **"Dateien hinzufuegen..."**
-- Waehlen Sie eine oder mehrere Dateien aus
-- Einzelne Dateien koennen ueber den **X**-Button wieder entfernt werden
+### 4. Sign
+- Review the summary (certificate + file count)
+- Click **"Sign now"**
+- Confirm the dialog
+- Watch progress in the live log
 
-### 3. SignTool konfigurieren
-
-- SignIT sucht automatisch nach `signtool.exe`
-- Falls nicht gefunden: Klicken Sie **"Durchsuchen..."** um den Pfad manuell anzugeben
-- Der **Timestamp-Server** ist auf DigiCert voreingestellt -- bei Bedarf aendern
-
-### 4. Signieren
-
-- Pruefen Sie die Zusammenfassung (Zertifikat + Dateianzahl)
-- Klicken Sie **"Jetzt signieren"**
-- Bestaetigen Sie den Dialog
-- Verfolgen Sie den Fortschritt im Live-Log rechts
-
-### Ausgefuehrter Befehl
-
-SignIT fuehrt pro Datei folgenden Befehl aus:
+**Command executed per file:**
 
 ```
-signtool.exe sign /sha1 <THUMBPRINT> /tr <TIMESTAMP-URL> /td sha256 /fd sha256 <DATEI>
+signtool.exe sign /sha1 <THUMBPRINT> /tr <TIMESTAMP-URL> /td sha256 /fd sha256 <FILE>
 ```
 
 ---
 
-## Selbst bauen
-
-### Voraussetzungen
+## Build from Source
 
 ```bash
 pip install -r requirements.txt
-```
 
-### Als EXE kompilieren
-
-```bash
-# Mit der mitgelieferten Spec-Datei (empfohlen)
+# Recommended: use the included spec file
 pyinstaller build.spec --clean --noconfirm
 
-# Oder manuell
+# Or build manually
 pyinstaller --onefile --windowed --name "SignIT" --icon=assets/icon.ico main.py
 ```
 
-Die fertige EXE liegt danach unter `dist/SignIT.exe`.
+Output: `dist/SignIT.exe`
 
-### Bekannte Build-Hinweise
-
-- **CustomTkinter-Assets:** Die `build.spec` kopiert die CustomTkinter-Theme-Dateien automatisch mit. Bei manuellem Build ggf. `--hidden-import customtkinter` und `--add-data` ergaenzen.
-- **Antivirus-Falschmeldungen:** Standalone-EXEs von PyInstaller werden gelegentlich von Antivirus-Software als verdaechtig markiert. Das ist ein bekanntes Problem von PyInstaller und kein Sicherheitsrisiko.
+> **Tip:** PyInstaller-built standalone EXEs are occasionally flagged by antivirus software. This is a known PyInstaller issue, not a security risk. Sign the resulting EXE with your own certificate to resolve this.
 
 ---
 
-## Projektstruktur
+## Project Structure
 
 ```
-signit/
-├── main.py                 # Entry-Point
+SignIT/
+├── main.py                 # Entry point
 ├── gui/
-│   ├── __init__.py
-│   ├── app.py              # Hauptfenster & Layout (SignITApp)
-│   ├── cert_panel.py       # Zertifikats-Auswahl-Panel
-│   ├── file_panel.py       # Datei-Auswahl-Panel
-│   ├── sign_panel.py       # SignTool-Konfiguration & Signierung
-│   └── log_panel.py        # Farbiges Live-Log mit Export
+│   ├── app.py              # Main window & layout
+│   ├── cert_panel.py       # Certificate selection panel
+│   ├── file_panel.py       # File selection panel
+│   ├── sign_panel.py       # SignTool config & signing
+│   └── log_panel.py        # Color-coded live log with export
 ├── core/
-│   ├── __init__.py
-│   ├── certstore.py        # Windows Certificate Store (Win32 API + PowerShell-Fallback)
-│   ├── signer.py           # signtool.exe Wrapper (Subprocess + Threading)
-│   └── utils.py            # Hilfsfunktionen (Pfadsuche, Timestamp-Server)
+│   ├── certstore.py        # Windows Certificate Store (Win32 API + PowerShell fallback)
+│   ├── signer.py           # signtool.exe wrapper (subprocess + threading)
+│   └── utils.py            # Helpers (path search, timestamp servers)
 ├── assets/
-│   └── icon.ico            # App-Icon
-├── requirements.txt        # Python-Abhaengigkeiten
-├── build.spec              # PyInstaller Build-Konfiguration
-├── LICENSE                 # Apache License 2.0
-├── .gitignore
-└── README.md
+│   └── icon.ico            # App icon
+├── requirements.txt
+├── build.spec              # PyInstaller build config
+├── setup.iss               # Inno Setup installer script
+└── LICENSE                 # Apache License 2.0
 ```
 
-### Architektur
+### Architecture
 
 ```
-┌─────────────────────────────────────────────────────────┐
-│                    main.py (Entry-Point)                │
-│                          │                              │
-│                    gui/app.py (SignITApp)                │
-│                ┌─────┼─────┬──────────┐                 │
-│                │     │     │          │                  │
-│           cert_panel file_panel sign_panel  log_panel    │
-│                │     │     │          │                  │
-│                └─────┴─────┴──────────┘                  │
-│                          │                              │
-│              ┌───────────┼───────────┐                  │
-│              │           │           │                  │
-│         certstore.py  signer.py   utils.py              │
-│         (Win32 API)   (subprocess) (Pfadsuche)          │
-└─────────────────────────────────────────────────────────┘
+┌──────────────────────────────────────────────────┐
+│                 main.py (Entry Point)            │
+│                        │                         │
+│                  gui/app.py (SignITApp)           │
+│            ┌─────┼─────┬──────────┐              │
+│            │     │     │          │               │
+│       cert_panel file_panel sign_panel log_panel  │
+│            │     │     │          │               │
+│            └─────┴─────┴──────────┘               │
+│                        │                         │
+│            ┌───────────┼───────────┐             │
+│            │           │           │             │
+│       certstore.py  signer.py   utils.py        │
+│       (Win32 API)  (subprocess) (path search)   │
+└──────────────────────────────────────────────────┘
 ```
 
 ---
 
-## Technische Details
+## Technical Details
 
-### Zertifikatsspeicher-Zugriff
-
-SignIT nutzt die **native Win32 Crypto API** ueber Python `ctypes`:
-
-- `CertOpenStore` -- oeffnet den Zertifikatsspeicher
-- `CertFindCertificateInStore` -- iteriert ueber alle Zertifikate
-- `CryptAcquireCertificatePrivateKey` -- prueft ob ein privater Schluessel vorhanden ist
-- `CertGetNameStringW` -- liest Subject/Issuer als lesbaren String
-
-Falls die native API fehlschlaegt (z.B. wegen Berechtigungen), wechselt SignIT automatisch auf einen **PowerShell-Fallback** (`Get-ChildItem Cert:\`).
-
-### Signiervorgang
-
-- Laeuft in einem **Hintergrund-Thread**, damit die GUI nicht einfriert
-- `subprocess.Popen` mit Echtzeit-stdout/stderr-Streaming
-- Exit-Code-Auswertung: `0` = Erfolg, alles andere = Fehler
-- `CREATE_NO_WINDOW` Flag verhindert Konsolenfenster-Aufblitzen
-
-### GUI-Framework
-
-- **CustomTkinter 5.x** -- modernes Tkinter-Derivat mit Dark/Light Theme
-- Komplett responsives Layout mit `grid` und `pack` Managern
-- Alle UI-Texte auf **Deutsch**
-
----
-
-## Voraussetzungen
-
-| Komponente | Version | Hinweis |
-|---|---|---|
-| **Windows** | 10 / 11 | Aeltere Versionen evtl. kompatibel |
-| **Python** | 3.10+ | Nur fuer Entwicklung / Selbst-Build |
-| **signtool.exe** | Windows SDK | Wird automatisch gesucht |
-| **Code-Signing-Zertifikat** | x509 | Im Windows-Zertifikatsspeicher installiert |
-
----
-
-## Abhaengigkeiten
-
-| Paket | Zweck |
+| Component | Details |
 |---|---|
-| [customtkinter](https://github.com/TomSchimansky/CustomTkinter) | Modernes GUI-Framework |
-| [Pillow](https://python-pillow.org/) | Bild-Verarbeitung (fuer CustomTkinter) |
-| [pyinstaller](https://pyinstaller.org/) | EXE-Kompilierung (nur Build) |
+| **Certificate access** | Native Win32 Crypto API via `ctypes` (`CertOpenStore`, `CertFindCertificateInStore`, `CryptAcquireCertificatePrivateKey`, `CertGetNameStringW`). PowerShell fallback via `Get-ChildItem Cert:\`. |
+| **Signing** | Runs in a background thread. `subprocess.Popen` with real-time stdout/stderr streaming. `CREATE_NO_WINDOW` flag prevents console flash. |
+| **GUI** | CustomTkinter 5.x with responsive `grid`/`pack` layout. |
 
 ---
 
-## Mitwirken
+## Requirements
 
-Beitraege sind willkommen! So koennen Sie helfen:
-
-1. **Bug melden** -- oeffnen Sie ein [Issue](../../issues)
-2. **Feature vorschlagen** -- oeffnen Sie ein [Issue](../../issues) mit dem Label `enhancement`
-3. **Code beitragen** -- forken Sie das Repo und erstellen Sie einen Pull Request
-
-### Entwicklungsumgebung einrichten
-
-```bash
-git clone https://github.com/IHR-USERNAME/signit.git
-cd signit
-pip install -r requirements.txt
-python main.py
-```
+| Component | Version | Note |
+|---|---|---|
+| **Windows** | 10 / 11 | Older versions may work |
+| **Python** | 3.10+ | Only for development / self-build |
+| **signtool.exe** | Windows SDK | Auto-detected |
+| **Code-Signing Certificate** | x509 | Installed in the Windows Certificate Store |
 
 ---
 
 ## FAQ
 
-**Q: Brauche ich ein Code-Signing-Zertifikat?**
-A: Ja. SignIT hilft beim _Anwenden_ des Zertifikats. Das Zertifikat selbst muessen Sie von einer Certificate Authority (CA) wie DigiCert, Sectigo, GlobalSign etc. erwerben und im Windows-Zertifikatsspeicher installieren.
+**Q: Do I need a code-signing certificate?**
+A: Yes. SignIT helps you *apply* the certificate. You need to purchase the certificate itself from a CA (DigiCert, Sectigo, GlobalSign, etc.) and install it in the Windows Certificate Store.
 
-**Q: Funktioniert SignIT auch mit EV-Zertifikaten (Extended Validation)?**
-A: EV-Zertifikate, die auf einem Hardware-Token (z.B. SafeNet) gespeichert sind, erfordern moeglicherweise eine PIN-Eingabe waehrend des Signiervorgangs. SignIT leitet den signtool-Prozess korrekt weiter, aber der Token-Treiber oeffnet seinen eigenen PIN-Dialog.
+**Q: Does it work with EV (Extended Validation) certificates?**
+A: EV certificates stored on a hardware token (e.g. SafeNet) may require a PIN prompt during signing. SignIT passes the signtool process through correctly, but the token driver will open its own PIN dialog.
 
-**Q: Warum wird meine EXE von Antivirus-Software blockiert?**
-A: PyInstaller-gebaute EXEs werden manchmal faelschlicherweise als verdaechtig markiert. Das ist ein branchenbekanntes Problem. Signieren Sie die fertige SignIT.exe selbst mit Ihrem Code-Signing-Zertifikat, um dieses Problem zu loesen.
-
-**Q: Kann ich SignIT kommerziell nutzen?**
-A: Ja. Die Apache 2.0 Lizenz erlaubt kommerzielle Nutzung, Modifikation und Weiterverbreitung. Einzige Bedingung: Namensnennung beibehalten (Copyright-Hinweis und LICENSE-Datei).
+**Q: Can I use SignIT commercially?**
+A: Absolutely. The Apache 2.0 license allows commercial use, modification, and redistribution. Just keep the copyright notice and LICENSE file.
 
 ---
 
-## Lizenz
+## Contributing
 
-Dieses Projekt steht unter der **Apache License 2.0**.
+Contributions are welcome! Here's how you can help:
 
-Das bedeutet, Sie duerfen:
-- Den Code **kommerziell nutzen**
-- Den Code **modifizieren**
-- Den Code **weiterverbreiten**
-- Abgeleitete Werke unter einer **anderen Lizenz** veroeffentlichen
+1. 🐛 **Report a bug** — open an [Issue](https://github.com/spepe86/SignIT/issues)
+2. 💡 **Suggest a feature** — open an [Issue](https://github.com/spepe86/SignIT/issues) with the `enhancement` label
+3. 🔧 **Contribute code** — fork the repo and open a Pull Request
 
-Einzige Pflicht: **Namensnennung** -- behalten Sie den Copyright-Hinweis und die LICENSE-Datei bei.
+```bash
+git clone https://github.com/spepe86/SignIT.git
+cd SignIT
+pip install -r requirements.txt
+python main.py
+```
 
-Siehe [LICENSE](LICENSE) fuer den vollstaendigen Lizenztext.
+---
+
+## License
+
+This project is licensed under the **Apache License 2.0**.
+
+You are free to use, modify, and distribute this software — including for commercial purposes. The only requirement is to retain the copyright notice and LICENSE file.
+
+See [LICENSE](LICENSE) for the full text.
 
 ---
 
 <p align="center">
-  <strong>Let's Do. | SignIT</strong> &mdash; Code-Signing, einfach gemacht.
+  <strong>Let's Do. | SignIT</strong> — Code signing, made simple.<br/>
+  <sub>⭐ Star this repo if it helps you!</sub>
 </p>
